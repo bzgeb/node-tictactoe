@@ -7,15 +7,27 @@ board = [0, 0, 0,
          0, 0, 0,
          0, 0, 0]
 
+players = 0
+
 io = require('socket.io').listen 8080
 io.sockets.on 'connection', (socket) ->
+    ++players
     console.log 'connection'
 
-    socket.emit 'board', board
+    id = players
+    socket.emit 'board', {id: id, board: board}
 
     socket.on 'move', (params) ->
         io.sockets.emit 'move', params
         console.log params
+
+io.sockets.on 'disconnect', (socket) ->
+    --players
+    console.log 'disconnect'
+
+io.sockets.on 'reload', ->
+    --players
+    console.log 'reload'
 
 app = express.createServer()
 app.configure ->
