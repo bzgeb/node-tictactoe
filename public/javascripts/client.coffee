@@ -27,6 +27,9 @@ socket.on 'move', (params) ->
 socket.on 'turn', (params) ->
     toggle_turn params['id']
 
+socket.on 'game_over', (params) ->
+    toggle_gameover()
+
 board = 0
 
 board_down = (event) ->
@@ -80,7 +83,7 @@ draw_o = (x_index, y_index) ->
     cxt.closePath()
 
 toggle_turn = (next_turn) ->
-    turn_div = document.getElementById 'turn'
+    turn_div = document.getElementById 'status'
     if player_id > 2
         turn_div.innerHTML = "You are a spectator"
         return
@@ -89,3 +92,7 @@ toggle_turn = (next_turn) ->
         turn_div.innerHTML = "It's your turn"
     else
         turn_div.innerHTML = "It's the other player's turn"
+
+toggle_gameover = ->
+    status_div = document.getElementById 'status'
+    status_div.innerHTML = "Game Over"
