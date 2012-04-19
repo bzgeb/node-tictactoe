@@ -1,14 +1,12 @@
 player_id = 0
 board_data = []
-current_turn = 0
 
 socket = io.connect 'http://localhost:8080'
 socket.on 'board', (params) ->
     console.log params
     player_id = params['id']
     board_data = params['board']
-    current_turn = params['turn']
-    toggle_turn current_turn
+    toggle_turn params['turn']
     console.log "Data: #{board_data}"
     for i in [0..2]
         for j in [0..2]
@@ -28,8 +26,7 @@ socket.on 'move', (params) ->
 
 socket.on 'turn', (params) ->
     console.log params
-    current_turn = params['id']
-    toggle_turn current_turn
+    toggle_turn params['id']
 
 board = 0
 
