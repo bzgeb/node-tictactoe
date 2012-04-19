@@ -25,7 +25,6 @@ socket.on 'move', (params) ->
     console.log params
 
 socket.on 'turn', (params) ->
-    console.log params
     toggle_turn params['id']
 
 board = 0
