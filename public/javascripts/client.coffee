@@ -45,6 +45,10 @@ window.addEventListener 'load', ->
     board = document.getElementById 'board'
     board.addEventListener 'mousedown', board_down, false
 
+window.onclose = ->
+    socket.disconnect()
+    socket.emit 'disconnect'
+
 get_tile = (x, y) ->
     x = Math.floor(x / 100)
     y = Math.floor(y / 100)

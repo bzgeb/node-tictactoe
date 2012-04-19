@@ -39,13 +39,12 @@ io.sockets.on 'connection', (socket) ->
             else
                 io.sockets.emit 'game_over', {}
 
-io.sockets.on 'disconnect', (socket) ->
-    --players
-    console.log 'disconnect'
+    socket.on 'disconnect', (socket) ->
+        --players
+        console.log 'user disconnected'
 
-io.sockets.on 'reload', ->
-    --players
-    console.log 'reload'
+    socket.on 'reload', (socket) ->
+        --players
 
 app = express.createServer()
 app.configure ->
