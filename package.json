@@ -1,0 +1,9 @@
+{ "name" : "tictactoe"
+, "version" : "0.0.1"
+, "description" : "An example node program using web sockets"
+, "scripts" : { "start" : "node server.js" }
+, "dependencies" : { 
+        "socket.io" : ">=0.7",
+        "express" : ">=2.5.5",
+        "jade": ">=0.16.4"}
+}
