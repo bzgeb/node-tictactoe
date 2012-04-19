@@ -1,11 +1,14 @@
 player_id = 0
 board_data = []
+current_turn = 0
 
 socket = io.connect 'http://localhost:8080'
 socket.on 'board', (params) ->
     console.log params
     player_id = params['id']
     board_data = params['board']
+    current_turn = params['turn']
+    toggle_turn current_turn
     console.log "Data: #{board_data}"
     for i in [0..2]
         for j in [0..2]
@@ -22,6 +25,11 @@ socket.on 'draw', (params) ->
 
 socket.on 'move', (params) ->
     console.log params
+
+socket.on 'turn', (params) ->
+    console.log params
+    current_turn = params['id']
+    toggle_turn current_turn
 
 board = 0
 
@@ -74,3 +82,14 @@ draw_o = (x_index, y_index) ->
     cxt.arc(x_pos, y_pos, 45, 0, Math.PI * 2, true)
     cxt.stroke()
     cxt.closePath()
+
+toggle_turn = (next_turn) ->
+    turn_div = document.getElementById 'turn'
+    if player_id > 2
+        turn_div.innerHTML = "You are a spectator"
+        return
+
+    if next_turn == player_id
+        turn_div.innerHTML = "It's your turn"
+    else
+        turn_div.innerHTML = "It's the other player's turn"

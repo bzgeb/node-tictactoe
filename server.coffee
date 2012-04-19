@@ -8,6 +8,7 @@ board = [[0, 0, 0],
          [0, 0, 0]]
 
 players = 0
+turn = 0
 
 io = require('socket.io').listen 8080
 io.sockets.on 'connection', (socket) ->
@@ -15,16 +16,20 @@ io.sockets.on 'connection', (socket) ->
     console.log 'connection'
 
     id = players
-    socket.emit 'board', {id: id, board: board}
+    socket.emit 'board', {id: id, board: board, turn:(turn+1)}
 
     socket.on 'move', (params) ->
         io.sockets.emit 'move', params
         console.log params
         x_index = params['x']
         y_index = params['y']
-        if board[x_index][y_index] == 0
+        id = params['id']
+
+        if board[x_index][y_index] == 0 and id == (turn+1)
             board[x_index][y_index] = params['id']
-            io.sockets.emit 'draw', {id:params['id'], x:x_index, y:y_index}
+            io.sockets.emit 'draw', {id:id, x:x_index, y:y_index}
+            turn = 1 - turn
+            io.sockets.emit 'turn', {id:(turn+1)}
 
 io.sockets.on 'disconnect', (socket) ->
     --players
