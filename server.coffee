@@ -3,9 +3,9 @@ fs = require 'fs'
 path = require 'path'
 express = require 'express'
 
-board = [0, 0, 0,
-         0, 0, 0,
-         0, 0, 0]
+board = [[0, 0, 0],
+         [0, 0, 0],
+         [0, 0, 0]]
 
 players = 0
 
@@ -20,6 +20,11 @@ io.sockets.on 'connection', (socket) ->
     socket.on 'move', (params) ->
         io.sockets.emit 'move', params
         console.log params
+        x_index = params['x']
+        y_index = params['y']
+        if board[x_index][y_index] == 0
+            board[x_index][y_index] = params['id']
+            io.sockets.emit 'draw', {id:params['id'], x:x_index, y:y_index}
 
 io.sockets.on 'disconnect', (socket) ->
     --players
