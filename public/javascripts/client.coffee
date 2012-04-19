@@ -6,6 +6,7 @@ socket.on 'board', (params) ->
     console.log params
     player_id = params['id']
     board_data = params['board']
+    toggle_turn params['turn']
     console.log "Data: #{board_data}"
     for i in [0..2]
         for j in [0..2]
@@ -23,6 +24,12 @@ socket.on 'draw', (params) ->
 socket.on 'move', (params) ->
     console.log params
 
+socket.on 'turn', (params) ->
+    toggle_turn params['id']
+
+socket.on 'game_over', (params) ->
+    toggle_gameover()
+
 board = 0
 
 board_down = (event) ->
@@ -37,6 +44,10 @@ board_down = (event) ->
 window.addEventListener 'load', ->
     board = document.getElementById 'board'
     board.addEventListener 'mousedown', board_down, false
+
+window.onclose = ->
+    socket.disconnect()
+    socket.emit 'disconnect'
 
 get_tile = (x, y) ->
     x = Math.floor(x / 100)
@@ -74,3 +85,18 @@ draw_o = (x_index, y_index) ->
     cxt.arc(x_pos, y_pos, 45, 0, Math.PI * 2, true)
     cxt.stroke()
     cxt.closePath()
+
+toggle_turn = (next_turn) ->
+    turn_div = document.getElementById 'status'
+    if player_id > 2
+        turn_div.innerHTML = "You are a spectator"
+        return
+
+    if next_turn == player_id
+        turn_div.innerHTML = "It's your turn"
+    else
+        turn_div.innerHTML = "It's the other player's turn"
+
+toggle_gameover = ->
+    status_div = document.getElementById 'status'
+    status_div.innerHTML = "Game Over"
